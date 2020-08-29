@@ -43,6 +43,9 @@ export const createProfile = (formdata, history, edit = false) => async dispatch
             history.push('/dashboard');
         }
     } catch (error) {
-        
+        dispatch({
+            type: PROFILE_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status}
+        });
     }
 }
