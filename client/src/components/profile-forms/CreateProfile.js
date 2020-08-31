@@ -1,8 +1,10 @@
-import React, { useState, Fragment } from 'react'
+import React, { useState, Fragment } from 'react';
+import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
+import { createProfile } from '../../actions/profile'
 
-const CreateProfile = props => {
+const CreateProfile = ({ createProfile}) => {
     const [formData, setFormData] = useState({
         company: '',
         website: '',
@@ -33,7 +35,12 @@ const CreateProfile = props => {
         instagram
     } = formData;
 
-    const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value})
+    const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value});
+
+    conSubmit = e => {
+      e.preventDefault();
+      createProfile(form, history);
+    }
 
     return (
         <Fragment>
@@ -147,7 +154,8 @@ const CreateProfile = props => {
 }
 
 CreateProfile.propTypes = {
+  createProfile: PropTypes.func.isRequired
+};
 
-}
 
-export default CreateProfile
+export default connect(null, { createProfile })(CreateProfile)
