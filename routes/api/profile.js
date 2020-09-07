@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../../middleware/auth');
 const User = require('../../models/User');
-const { check,validationResult } = require('express-validator/check');
+const { check,validationResult } = require('express-validator');
 const Profile = require('../../models/Profile');
+const Post = require('../../models/Post');
 const request = require('request');
 const config = require('config');
 
@@ -153,8 +154,8 @@ router.get('/user/:user_id', async (req,res) => {
 
 router.delete('/', auth, async (req,res) => {
     try {
-        //to do remove users posts 
-
+        //remove users posts 
+        await Post.deleteMany({user: req.user.id})
 
         //Remove Profile
         await Profile.findOneAndRemove({ user: req.user.id });
@@ -282,7 +283,7 @@ router.put('/education', [auth, [
     } catch (error) {
         console.error(err.message);
         res.status(500).send('Server Error')
-
+        
     }
 
 
@@ -338,7 +339,7 @@ router.get('/github/:username', (req,res) => {
             if(error) console.error(error);
 
             if(response.statusCode !== 200) {
-                res.status(404).json({ msg:' No Github Profile Found'})
+                return res.status(404).json({ msg:' No Github Profile Found'})
             }
 
             res.json(JSON.parse(body));
